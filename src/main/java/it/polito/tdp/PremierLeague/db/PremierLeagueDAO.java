@@ -130,7 +130,7 @@ public class PremierLeagueDAO {
 				+ "AND  a1.TimePlayed>? "
 				+ "AND a2.MatchID=m2.MatchID "
 				+ "AND Month(m1.Date)=MONTH(m2.Date) "
-				+ "AND a1.TimePlayed=a2.TimePlayed "
+				+ "AND a2.TimePlayed>? "
 				+ "AND m1.MatchID> m2.MatchID "
 				+ "AND a1.PlayerID=a2.PlayerID "
 				+ "GROUP BY id1, id2 "
@@ -143,6 +143,7 @@ public class PremierLeagueDAO {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setInt(1, mese);
 			st.setInt(2, minuti);
+			st.setInt(3, minuti);
 			
 			ResultSet res = st.executeQuery();
 			while (res.next()) {

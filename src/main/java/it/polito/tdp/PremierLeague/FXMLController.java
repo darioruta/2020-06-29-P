@@ -64,7 +64,7 @@ public class FXMLController {
     			txtResult.setText("Devi prima creare un grafo");
     		} else {
     			
-    			List<Adiacenza> res= this.model.getConnMax(min);
+    			List<Adiacenza> res= this.model.getConnMax();
     			txtResult.clear();
     			txtResult.appendText("Coppie con connessione massima:");
     			for(Adiacenza a : res) {

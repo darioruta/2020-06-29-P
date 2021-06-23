@@ -45,9 +45,8 @@ public class Model {
 		List <Adiacenza> archi = this.dao.getArchi(this.idMap, mese, minuti);
 		
 		for (Adiacenza a : archi) {
-			if (this.grafo.containsVertex(a.getM1()) && this.grafo.containsVertex(a.getM2())) {
-					Graphs.addEdgeWithVertices(this.grafo, a.getM1(), a.getM2(), a.getPeso());
-				}
+			Graphs.addEdge(this.grafo, a.getM1(), a.getM2(), a.getPeso());
+	
 		}
 		
 		/*String res = "#Vertici: "+this.grafo.vertexSet().size()+"\n#Archi: " + this.grafo.edgeSet().size();
@@ -66,17 +65,25 @@ public class Model {
 	
 	
 	
-	public List<Adiacenza> getConnMax(int min){
-		
+	public List<Adiacenza> getConnMax(){
+		int min=0;
 		List<Adiacenza> res = new LinkedList<Adiacenza>();
-		
+		Adiacenza a = null;
 		for (DefaultWeightedEdge e : this.grafo.edgeSet()) {
-			if(this.grafo.getEdgeWeight(e)>= min) {
+			if(this.grafo.getEdgeWeight(e)> min) {
 				Adiacenza aTemp = new Adiacenza (this.grafo.getEdgeSource(e), this.grafo.getEdgeTarget(e), (int) this.grafo.getEdgeWeight(e));
-				res.add(aTemp);
+				a= aTemp;
+				min = a.getPeso();
 				
 			}
 				
+		}
+		
+		for (DefaultWeightedEdge e : this.grafo.edgeSet()) {
+			if(this.grafo.getEdgeWeight(e)== min) {
+				Adiacenza aTemp = new Adiacenza (this.grafo.getEdgeSource(e), this.grafo.getEdgeTarget(e), (int) this.grafo.getEdgeWeight(e));
+				res.add(aTemp);
+			}
 		}
 		
 		return res;
@@ -115,13 +122,21 @@ public class Model {
 			}
 		}
 		for(Match mm : Graphs.successorListOf(this.grafo, parziale.get(parziale.size()-1))){
-			if(!parziale.contains(mm)) {
+			if(!parziale.contains(mm) && analyzeTeam(parziale.get(parziale.size()-1), mm)== true) {
 				parziale.add(mm);
 				cerca(parziale, partenza, arrivo);
 				parziale.remove(parziale.size()-1);
 			}
 		}
 		
+	}
+
+	private boolean analyzeTeam(Match match, Match mm) {
+		
+		if((match.getTeamHomeID()==mm.getTeamAwayID() && match.getTeamAwayID()== mm.getTeamHomeID())) {
+			return false;
+		}
+		return true;
 	}
 
 	private int calcolaLunghezza(List<Match> parziale) {
